@@ -1,25 +1,36 @@
 <template>
-<!--  When VUE finds a ref in the template it will automatically expose the value-->
-  <h2>Count is: {{ initialNum }}</h2>
+  <h2>Count is: {{ reactiveObj.initialNum }}</h2>
+
+  <!--  After you use toRefs(), you can use the property of the reactive object directly-->
+  <!--  <h2>Count is: {{ initialNum }}</h2>-->
   <button @click="decrement">Count Down!</button>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { reactive } from 'vue'
 export default {
   name:'SimpleCountDown',
 
   // You can also use the setup function to write compositionAPI syntax
   setup() {
 
-    const initialNum = ref(10);
+    const reactiveObj = reactive({
+      initialNum: 10
+    })
 
     function decrement() {
-      return initialNum.value--;
+      return reactiveObj.initialNum--;
     }
 
-    //We need to return the objects, functions that the template needs to render...
-    return { initialNum, decrement };
+    //we return the entire reactiveObj
+    //Error: we can't only return reactiveObj.initialNum (we will lose the reactivity...)
+    // return { reactiveObj.count, decrement};
+
+    return { reactiveObj, decrement };
+
+    //if you don't want to do reactiveObj.xxx all the time...
+    //you can use toRefs()
+    //return { ...toRefs(reactiveObj), decrement};
 
   }
 }
